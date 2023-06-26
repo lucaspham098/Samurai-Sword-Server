@@ -43,7 +43,7 @@ io.on('connection', socket => {
     })
 
     socket.on('findRoom', room => {
-        if (rooms[room] && rooms[room].participants.length < 8) {
+        if (rooms[room] && rooms[room].participants.length < 7) {
             socket.emit('navToLobby')
         } else {
             const message = 'Room does not exist or is full'
@@ -52,7 +52,7 @@ io.on('connection', socket => {
     });
 
     socket.on('askForPlayers', room => {
-        console.log('recieved askplayers')
+        // console.log('recieved askplayers')
         if (rooms[room]) {
             const players = rooms[room].participants.map((player) => {
                 return player
@@ -62,7 +62,7 @@ io.on('connection', socket => {
     })
 
     socket.on('disconnect', () => {
-        console.log(`${socket.id} left`)
+        // console.log(`${socket.id} left`)
         Object.keys(rooms).forEach((room) => {
             const participants = rooms[room].participants;
             const participantIndex = participants.indexOf(socket.id);
@@ -72,7 +72,14 @@ io.on('connection', socket => {
             }
         });
     });
+
+    socket.on('startGame', room => {
+        console.log('recieve')
+        io.in(room).emit('gameStarted')
+    })
 })
+
+
 
 app.listen(PORT, () => {
     console.log(`we live on ${3001}`)
