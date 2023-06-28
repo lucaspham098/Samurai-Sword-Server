@@ -25,7 +25,13 @@ io.on('connection', socket => {
         if (!rooms[room]) {
             socket.join(room)
             rooms[room] = {
-                participants: [socket.id],
+                participants: [
+                    {
+                        socketID: socket.id,
+                        hand: [],
+                        role: '',
+                    }
+                ],
             }
             console.log(`${socket.id} created room ${room}`);
             socket.emit('joinedRoom')
@@ -37,7 +43,12 @@ io.on('connection', socket => {
 
     socket.on('joinRoom', room => {
         socket.join(room)
-        rooms[room].participants.push(socket.id);
+        rooms[room].participants.push({
+            socketID: socket.id,
+            hand: [],
+            role: '',
+
+        });
         console.log(`${socket.id} joined room ${room} with ${rooms[room].participants.length}`)
         socket.emit('joinedRoom')
     })
@@ -54,7 +65,7 @@ io.on('connection', socket => {
     socket.on('askForPlayers', room => {
         if (rooms[room]) {
             const players = rooms[room].participants.map((player) => {
-                return player
+                return player.socketID
             })
             io.in(room).emit('players', players)
         }
@@ -75,10 +86,20 @@ io.on('connection', socket => {
         io.in(room).emit('gameStarted')
     })
 
-    socket.on('initGameState', data => {
-        console.log('recieve from the client')
-        console.log(data)
-        io.in(data.room).emit('initGameState', data)
+    socket.on('initGameState', (playerData, data, room) => {
+        rooms[room].participants.map((player, index) => {
+            player.hand = playerData[index].hand
+            player.role = playerData[index].role
+        })
+        console.log(rooms[room].participants)
+        const shogun = rooms[room].participants.find(participant => participant.role.role === 'Shogun')
+        io.in(room).emit('setTurn', shogun.socketID)
+        io.in(room).emit('initGameState', data)
+    })
+
+    socket.on('getHand', room => {
+        const player = rooms[room].participants.find(participant => participant.socketID === socket.id)
+        io.to(socket.id).emit('getHand', player.hand)
     })
 })
 
