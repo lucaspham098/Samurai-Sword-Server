@@ -101,6 +101,15 @@ io.on('connection', socket => {
         const player = rooms[room].participants.find(participant => participant.socketID === socket.id)
         io.to(socket.id).emit('getHand', player.hand)
     })
+
+    socket.on('updateGameState', (playerData, data, room) => {
+        console.log('recieve update game')
+        console.log(playerData)
+        rooms[room].participants.map((player, index) => {
+            player.hand = playerData[index].hand
+        })
+        io.in(room).emit('updateGameState', data)
+    })
 })
 
 
