@@ -91,7 +91,7 @@ io.on('connection', socket => {
             player.hand = playerData[index].hand
             player.role = playerData[index].role
         })
-        console.log(rooms[room].participants)
+        // console.log(rooms[room].participants)
         const shogun = rooms[room].participants.find(participant => participant.role.role === 'Shogun')
         io.in(room).emit('setTurn', shogun.socketID)
         io.in(room).emit('initGameState', data)
@@ -103,12 +103,17 @@ io.on('connection', socket => {
     })
 
     socket.on('updateGameState', (playerData, data, room) => {
-        console.log('recieve update game')
-        console.log(playerData)
+        console.log(data.attacker)
+        console.log(data.victim)
         rooms[room].participants.map((player, index) => {
             player.hand = playerData[index].hand
         })
-        io.in(room).emit('updateGameState', data)
+        socket.to(room).emit('updateGameState', data)
+    })
+
+    socket.on('attacked', (victim, room) => {
+        socket.to(victim).emit('attacked')
+        io.in(room).emit('switchTurn', victim)
     })
 })
 
