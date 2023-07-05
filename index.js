@@ -117,6 +117,12 @@ io.on('connection', socket => {
     socket.on('setTurnBack', (currentPlayer, room) => {
         io.in(room).emit('setTurnBack', currentPlayer)
     })
+
+    socket.on('newTurn', (newTurn, room) => {
+        console.log(newTurn)
+        io.in(room).emit('newTurn', newTurn)
+    })
+
 })
 
 
