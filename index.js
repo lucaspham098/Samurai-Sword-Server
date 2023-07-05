@@ -103,8 +103,6 @@ io.on('connection', socket => {
     })
 
     socket.on('updateGameState', (playerData, data, room) => {
-        console.log(data.attacker)
-        console.log(data.victim)
         rooms[room].participants.map((player, index) => {
             player.hand = playerData[index].hand
         })
@@ -114,6 +112,10 @@ io.on('connection', socket => {
     socket.on('attacked', (victim, room) => {
         socket.to(victim).emit('attacked')
         io.in(room).emit('switchTurn', victim)
+    })
+
+    socket.on('setTurnBack', (currentPlayer, room) => {
+        io.in(room).emit('setTurnBack', currentPlayer)
     })
 })
 
