@@ -160,6 +160,11 @@ io.on('connection', socket => {
     socket.on('battlecryPlayed', (room) => {
         socket.to(room).emit('battlecryPlayed')
     })
+    socket.on('jujitsuPlayed', (room) => {
+        socket.to(room).emit('jujitsuPlayed')
+    })
+
+
 })
 
 
