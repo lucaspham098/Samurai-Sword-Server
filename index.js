@@ -141,8 +141,8 @@ io.on('connection', socket => {
         io.in(room).emit('switchTurn', victim)
     })
 
-    socket.on('setTurnBack', (currentPlayer, room) => {
-        io.in(room).emit('setTurnBack', currentPlayer)
+    socket.on('setTurnBack', (currentPlayer) => {
+        io.in(currentPlayer).emit('setTurnBack', currentPlayer)
     })
 
     socket.on('newTurn', (newTurn, room) => {
@@ -154,13 +154,11 @@ io.on('connection', socket => {
     })
 
     socket.on('teaCeremony', (data, room) => {
-        console.log('tea party')
         socket.to(room).emit('teaCeremony', data)
     })
 
-    socket.on('battlecryPlayed', (newTurn, room) => {
-        console.log(newTurn)
-        socket.to(room).emit('battlecryPlayed', newTurn)
+    socket.on('battlecryPlayed', (room) => {
+        socket.to(room).emit('battlecryPlayed')
     })
 })
 
