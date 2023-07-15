@@ -33,7 +33,11 @@ io.on('connection', socket => {
                         hand: [],
                         attacks: 1,
                         health: 0,
-                        honourPoints: 0
+                        honourPoints: 0,
+                        focus: 0,
+                        armor: 0,
+                        fastDraw: 0,
+                        bushido: false
                     }
                 ],
             }
@@ -54,7 +58,11 @@ io.on('connection', socket => {
             hand: [],
             attacks: 1,
             health: 0,
-            honourPoints: 0
+            honourPoints: 0,
+            focus: 0,
+            armor: 0,
+            fastDraw: 0,
+            bushido: false
 
         });
         console.log(`${socket.id} joined room ${room} with ${rooms[room].participants.length}`)
@@ -120,7 +128,7 @@ io.on('connection', socket => {
 
         const updatedPlayerData = rooms[room].participants
         const shogun = rooms[room].participants.find(participant => participant.role.role === 'Shogun')
-        io.in(room).emit('setTurn', shogun.socketID)
+        io.in(room).emit('setTurn', shogun)
         io.in(room).emit('initGameState', updatedPlayerData)
     })
 
@@ -142,11 +150,11 @@ io.on('connection', socket => {
     })
 
     socket.on('setTurnBack', (currentPlayer) => {
-        io.in(currentPlayer).emit('setTurnBack', currentPlayer)
+        io.in(currentPlayer.socketID).emit('setTurnBack', currentPlayer)
     })
 
-    socket.on('newTurn', (newTurn, room) => {
-        io.in(room).emit('newTurn', newTurn)
+    socket.on('newTurn', (newTurn) => {
+        io.to(newTurn).emit('newTurn')
     })
 
     socket.on('alterVictimHand', (victim, victimHand) => {
