@@ -144,17 +144,18 @@ io.on('connection', socket => {
         socket.to(room).emit('updateGameState', data)
     })
 
-    socket.on('attacked', (victim, room) => {
-        socket.to(victim).emit('attacked')
-        io.in(room).emit('switchTurn', victim)
+    socket.on('attacked', (selectedPlayer, room) => {
+        socket.to(selectedPlayer).emit('attacked')
+        io.in(room).emit('switchTurn', selectedPlayer)
     })
 
     socket.on('setTurnBack', (currentPlayer) => {
-        io.in(currentPlayer.socketID).emit('setTurnBack', currentPlayer)
+        console.log(currentPlayer)
+        io.to(currentPlayer.socketID).emit('setTurnBack', currentPlayer)
     })
 
-    socket.on('newTurn', (newTurn) => {
-        io.to(newTurn).emit('newTurn')
+    socket.on('newTurn', (newTurn, room) => {
+        io.in(room).emit('newTurn', newTurn)
     })
 
     socket.on('alterVictimHand', (victim, victimHand) => {
