@@ -103,7 +103,7 @@ io.on('connection', socket => {
     })
 
     socket.on('initGameState', (playerData, room) => {
-        // console.log(playerData)
+        console.log(playerData)
         rooms[room].participants.map((player, index) => {
             // player.socketID = player.socketID
             player.role = playerData[index].role
@@ -158,19 +158,12 @@ io.on('connection', socket => {
         io.in(room).emit('newTurn', newTurn)
     })
 
-    socket.on('alterVictimHand', (victim, victimHand) => {
-        io.to(victim).emit('alterVictimHand', victimHand)
-    })
 
-    socket.on('teaCeremony', (data, room) => {
-        socket.to(room).emit('teaCeremony', data)
+    socket.on('battlecryPlayed', (room, playersData) => {
+        socket.to(room).emit('battlecryPlayed', playersData)
     })
-
-    socket.on('battlecryPlayed', (room) => {
-        socket.to(room).emit('battlecryPlayed')
-    })
-    socket.on('jujitsuPlayed', (room) => {
-        socket.to(room).emit('jujitsuPlayed')
+    socket.on('jujitsuPlayed', (room, playersData) => {
+        socket.to(room).emit('jujitsuPlayed', playersData)
     })
 
 
