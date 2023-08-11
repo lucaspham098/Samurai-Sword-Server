@@ -21,12 +21,13 @@ const rooms = {}
 io.on('connection', socket => {
     console.log(`Here : ${socket.id}`)
 
-    socket.on('createRoom', (room) => {
+    socket.on('createRoom', (room, name) => {
         if (!rooms[room]) {
             socket.join(room)
             rooms[room] = {
                 participants: [
                     {
+                        name: name,
                         socketID: socket.id,
                         role: '',
                         character: '',
@@ -49,9 +50,10 @@ io.on('connection', socket => {
 
     })
 
-    socket.on('joinRoom', room => {
+    socket.on('joinRoom', (room, name) => {
         socket.join(room)
         rooms[room].participants.push({
+            name: name,
             socketID: socket.id,
             role: {},
             character: {},
@@ -62,7 +64,8 @@ io.on('connection', socket => {
             focus: 0,
             armor: 0,
             fastDraw: 0,
-            bushido: false
+            bushido: false,
+            harmless: false
 
         });
         console.log(`${socket.id} joined room ${room} with ${rooms[room].participants.length}`)
@@ -130,11 +133,6 @@ io.on('connection', socket => {
         const shogun = rooms[room].participants.find(participant => participant.role.role === 'Shogun')
         io.in(room).emit('setTurn', shogun)
         io.in(room).emit('initGameState', updatedPlayerData)
-    })
-
-    socket.on('getHand', room => {
-        const player = rooms[room].participants.find(participant => participant.socketID === socket.id)
-        io.to(socket.id).emit('getHand', player.hand)
     })
 
     socket.on('updateGameState', (data, room) => {
