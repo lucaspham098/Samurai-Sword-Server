@@ -6,6 +6,8 @@ require('dotenv').config()
 const CLIENT_URL = process.env.CLIENT_URL
 const PORT = process.env.PORT
 
+app.use(cors());
+
 const io = require("socket.io")(PORT, {
     cors: {
         origin: ["https://admin.socket.io/", CLIENT_URL]
