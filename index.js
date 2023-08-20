@@ -1,4 +1,4 @@
-// const cors = require('cors')
+const cors = require('cors')
 const { instrument } = require("@socket.io/admin-ui");
 const express = require('express')
 const app = express()
