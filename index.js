@@ -95,7 +95,7 @@ io.on('connection', socket => {
     socket.on('disconnect', () => {
         Object.keys(rooms).forEach((room) => {
             const participants = rooms[room].participants;
-            const participantIndex = participants.indexOf(socket.id);
+            const participantIndex = participants.findIndex(participant => participant.socketID === socket.id);
             if (participantIndex !== -1) {
                 participants.splice(participantIndex, 1);
                 console.log(`${socket.id} left room ${room}`);
@@ -118,19 +118,6 @@ io.on('connection', socket => {
             player.health = playerData[index].health
             player.honourPoints = playerData[index].honourPoints
         })
-        // const updatedPlayerData = rooms[room].participants.map((player, index) => {
-        //     return {
-        //         socketID: player.socketID,
-        //         role: playerData[index].role,
-        //         character: playerData[index].character,
-        //         hand: playerData[index].hand,
-        //         attacks: playerData[index].attacks,
-        //         health: playerData[index].health,
-        //         honourPoints: playerData[index].honourPoints
-        //     }
-        // })
-        // const shogun = updatedPlayerData.find(participant => participant.role.role === 'Shogun')
-
         const updatedPlayerData = rooms[room].participants
         const shogun = rooms[room].participants.find(participant => participant.role.role === 'Shogun')
         io.in(room).emit('setTurn', shogun)
@@ -138,9 +125,7 @@ io.on('connection', socket => {
     })
 
     socket.on('updateGameState', (data, room) => {
-        // rooms[room].participants.map((player, index) => {
-        //     player.hand = playerData[index].hand
-        // })
+
         socket.to(room).emit('updateGameState', data)
     })
 
@@ -149,9 +134,9 @@ io.on('connection', socket => {
         io.in(room).emit('switchTurn', selectedPlayer)
     })
 
-    socket.on('setTurnBack', (currentPlayer) => {
+    socket.on('setTurnBack', (currentPlayer, data) => {
         console.log(currentPlayer)
-        io.to(currentPlayer.socketID).emit('setTurnBack', currentPlayer)
+        io.to(currentPlayer.socketID).emit('setTurnBack', currentPlayer, data)
     })
 
     socket.on('newTurn', (newTurn, room) => {
