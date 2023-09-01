@@ -144,11 +144,11 @@ io.on('connection', socket => {
     })
 
 
-    socket.on('battlecryPlayed', (room, playersData) => {
-        socket.to(room).emit('battlecryPlayed', playersData)
+    socket.on('battlecryPlayed', (playerSocketID, battlecryJujitsuArray) => {
+        io.to(playerSocketID).emit('battlecryPlayed', battlecryJujitsuArray)
     })
-    socket.on('jujitsuPlayed', (room, playersData) => {
-        socket.to(room).emit('jujitsuPlayed', playersData)
+    socket.on('jujitsuPlayed', (playerSocketID, battlecryJujitsuArray) => {
+        io.to(playerSocketID).emit('jujitsuPlayed', battlecryJujitsuArray)
     })
 
 
