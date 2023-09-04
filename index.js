@@ -103,8 +103,12 @@ io.on('connection', socket => {
         });
     });
 
-    socket.on('startGame', room => {
-        io.in(room).emit('gameStarted')
+    socket.on('3PlayerStartGame', room => {
+        io.in(room).emit('3PlayerGameStarted')
+    })
+
+    socket.on('4PlayerStartGame', room => {
+        io.in(room).emit('4PlayerGameStarted')
     })
 
     socket.on('initGameState', (playerData, room) => {
