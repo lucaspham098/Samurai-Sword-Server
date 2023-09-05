@@ -110,6 +110,15 @@ io.on('connection', socket => {
     socket.on('4PlayerStartGame', room => {
         io.in(room).emit('4PlayerGameStarted')
     })
+    socket.on('5PlayerStartGame', room => {
+        io.in(room).emit('5PlayerGameStarted')
+    })
+    socket.on('6PlayerStartGame', room => {
+        io.in(room).emit('6PlayerGameStarted')
+    })
+    socket.on('7PlayerStartGame', room => {
+        io.in(room).emit('7PlayerGameStarted')
+    })
 
     socket.on('initGameState', (playerData, room) => {
         console.log(playerData)
