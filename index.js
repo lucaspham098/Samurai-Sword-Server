@@ -3,8 +3,6 @@ const { instrument } = require("@socket.io/admin-ui");
 const express = require('express')
 const app = express()
 require('dotenv').config()
-// const CLIENT_URL = process.env.CLIENT_URL
-// const PORT = process.env.PORT
 
 app.use(cors());
 
@@ -99,6 +97,10 @@ io.on('connection', socket => {
             if (participantIndex !== -1) {
                 participants.splice(participantIndex, 1);
                 console.log(`${socket.id} left room ${room}`);
+                const players = rooms[room].participants.map((player) => {
+                    return player
+                })
+                io.in(room).emit('players', players)
             }
         });
     });
