@@ -97,10 +97,6 @@ io.on('connection', socket => {
             if (participantIndex !== -1) {
                 participants.splice(participantIndex, 1);
                 console.log(`${socket.id} left room ${room}`);
-                const players = rooms[room].participants.map((player) => {
-                    return player
-                })
-                io.in(room).emit('players', players)
             }
         });
     });
