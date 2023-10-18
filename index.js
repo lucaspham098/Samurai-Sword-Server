@@ -154,7 +154,6 @@ io.on('connection', socket => {
         io.in(room).emit('newTurn', newTurn)
     })
 
-
     socket.on('battlecryPlayed', (playerSocketID, battlecryJujitsuArray) => {
         io.to(playerSocketID).emit('battlecryPlayed', battlecryJujitsuArray)
     })
@@ -162,6 +161,9 @@ io.on('connection', socket => {
         io.to(playerSocketID).emit('jujitsuPlayed', battlecryJujitsuArray)
     })
 
+    socket.on('closeBattlecryJujitsuModule', room => {
+        socket.to(room).emit('closeBattlecryJujitsuModule')
+    })
 
 })
 
